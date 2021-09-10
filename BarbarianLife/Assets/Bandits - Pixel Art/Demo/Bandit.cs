@@ -12,6 +12,12 @@ public class Bandit : MonoBehaviour {
     private bool                m_grounded = false;
     private bool                m_combatIdle = false;
     private bool                m_isDead = false;
+    
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayers;
+
+    public int attackDamage = 2;
 
     // Use this for initialization
     void Start () {
@@ -66,7 +72,7 @@ public class Bandit : MonoBehaviour {
 
         //Attack
         else if(Input.GetMouseButtonDown(0)) {
-            m_animator.SetTrigger("Attack");
+            Attack();
         }
 
         //Change between idle and combat idle
@@ -93,5 +99,30 @@ public class Bandit : MonoBehaviour {
         //Idle
         else
             m_animator.SetInteger("AnimState", 0);
+    }
+
+    void Attack()
+    {
+        //Trigger Attack Animation
+        m_animator.SetTrigger("Attack");
+
+        //Detect enemies in range of attack =
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+        // Damage enemies
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+            Debug.Log("We hit " + enemy.name);
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if(attackPoint == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }
