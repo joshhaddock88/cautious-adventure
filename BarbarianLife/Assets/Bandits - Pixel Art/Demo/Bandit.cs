@@ -17,7 +17,7 @@ public class Bandit : MonoBehaviour {
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
 
-    public int attackDamage = 40;
+    public int attackDamage = 2;
 
     // Use this for initialization
     void Start () {
